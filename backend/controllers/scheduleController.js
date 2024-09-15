@@ -117,8 +117,6 @@ const processSchedule = async (req, res) => {
       continue; // Skip to the next row if startTime is invalid
     }
 
-    const MAX_CLASSES_STUDENT = parseInt(process.env.MAX_CLASSES_STUDENT_PER_DAY);
-    const MAX_CLASSES_INSTRUCTOR = parseInt(process.env.MAX_CLASSES_INSTRUCTOR_PER_DAY);
     const classDuration = parseInt(process.env.CLASS_DURATION_MINUTES);
 
     try {
