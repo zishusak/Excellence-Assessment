@@ -9,6 +9,17 @@ const path = require('path');
 const moment = require('moment-timezone');
 
 
+const getInstructorList = async (req, res) => {
+   
+    const Instructors = await Instructor.find();
+
+    if (Instructors) {
+        return res.status(200).json({ data: Instructors });
+    } else {
+       return res.status(404).json({ message: 'Instructor not found' });
+    }
+
+}
 
 // API to get class schedule report filtered by date and instructor name
 const getClassScheduleReport = async (req, res) => {
@@ -82,4 +93,4 @@ const getDailyClassCount = async (req, res) => {
     }
   };
 
-  module.exports = { getClassScheduleReport, getDailyClassCount };
+  module.exports = { getClassScheduleReport, getDailyClassCount , getInstructorList};
