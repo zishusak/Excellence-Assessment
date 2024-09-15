@@ -5,44 +5,47 @@ const path = require('path');
 //const moment = require('moment');
 const moment = require('moment-timezone');
 
+// Function to add 4 hours to a given start time
+function addFourHours(startTime) {
+    const parsedTime = moment.tz(startTime, 'MM/DD/YYYY h:mm:ss A', 'Asia/Dubai');
+    return parsedTime.add(4, 'hours').toDate(); // Returns a JavaScript Date object
+}
+
 // Function to calculate the end time of a class
 function calculateEndTime(startTime, duration) {
-  // Assuming startTime is from CSV in a custom format
-  const parsedStartTime = moment.tz(startTime, 'MM/DD/YYYY h:mm:ss A', 'Asia/Dubai').toDate(); 
-  return new Date(parsedStartTime.getTime() + duration * 45000); // duration is in minutes
+    // Assuming startTime is from CSV in a custom format
+    const parsedStartTime = moment.tz(startTime, 'MM/DD/YYYY h:mm:ss A', 'Asia/Dubai').utc().toDate(); 
+    return new Date(parsedStartTime.getTime() + duration * 60000); // duration is in minutes
 }
 
-async function checkClassExists(studentId, instructorId, parsedStartTime, duration) {
-
-  const parsedEndTime = new Date(parsedStartTime.getTime() + duration * 45000);
-
-  //console.log(parsedStartTime);
-  //console.log(parsedEndTime);
-
-  // Ensure parsedStartTime is valid
-  if (isNaN(parsedStartTime.getTime())) {
-    throw new Error('Invalid start time provided.');
-  }
-
-  // Query to check if a class exists for either the instructor or student at the same time
-  const classExists = await ClassSchedule.findOne({
-    $or: [
-      { instructorId },   // Either the instructor is involved
-      { studentId }       // Or the student is involved
-    ],
-    startTime: { 
-      $lt: parsedEndTime  // Existing class starts before the new class ends
-    },
-    endTime: { 
-      $gt: parsedStartTime  // Existing class ends after the new class starts
+async function checkClassExists(studentId, instructorId, startTime, duration) {
+    const parsedStartTime = moment.tz(startTime, 'MM/DD/YYYY h:mm:ss A', 'Asia/Dubai').utc().toDate();
+    const parsedEndTime = calculateEndTime(startTime, duration);
+  
+    // Ensure parsedStartTime is valid
+    if (isNaN(parsedStartTime.getTime())) {
+      throw new Error('Invalid start time provided.');
     }
-  });
-
- // console.log(classExists);
- // debugger;
-  // Return true if a class already exists, false otherwise
-  return !!classExists;
-}
+  
+    console.log(`Checking for class existence: ${parsedStartTime} to ${parsedEndTime}`);
+  
+    // Query to check if a class exists for either the instructor or student at the same time
+    const classExists = await ClassSchedule.findOne({
+      $or: [
+        { instructorId },
+        { studentId }
+      ],
+      startTime: { 
+        $lt: parsedEndTime 
+      },
+      endTime: { 
+        $gt: parsedStartTime 
+      }
+    });
+  
+    console.log(`Class existence check result: ${classExists}`);
+    return !!classExists;
+  }
 
 
 // Handle CSV actions
@@ -56,8 +59,9 @@ const processSchedule = async (req, res) => {
 
     // Parse startTime to ensure it's a Date object
     // Assuming startTime is in the format '10/10/2024 1:00:00 PM' from CSV
-    const parsedStartTime = moment.tz(startTime, 'MM/DD/YYYY h:mm:ss A', 'Asia/Dubai').toDate();
-
+    const parsedStartTime = moment.tz(startTime, 'MM/DD/YYYY h:mm:ss A', 'Asia/Dubai').utc().toDate();
+    console.log(parsedStartTime);
+    
     if (isNaN(parsedStartTime.getTime())) {
         responses.push({ status: 'error', message: `Invalid startTime: ${startTime}`, registrationId });
         continue; // Skip to the next row if startTime is invalid
@@ -70,16 +74,14 @@ const processSchedule = async (req, res) => {
     try {
         if (action === 'new') {
 
-          const classExists = await checkClassExists(studentId, instructorId, parsedStartTime, classDuration);
+            const classExists = await checkClassExists(studentId, instructorId, startTime, classDuration);
 
-          //console.log(classExists);
-
-          if (classExists) {
-            //console.log('Class already exists for either the instructor or the student at the same time.');
-            throw new Error(`Class already exists for either the instructor or the student at the same time.`);
-          } 
+            if (classExists) {
+              responses.push({ status: 'error', message: 'Class already exists for either the instructor or the student at the same time.', registrationId });
+              continue; // Skip adding the class
+            }
           
-          console.log(parsedStartTime);
+          
           // Save new class
           const newClass = new ClassSchedule({
                 studentId,
