@@ -102,154 +102,138 @@ async function checkClassOverlap(studentId, instructorId, startTime, duration) {
 // Handle CSV actions
 const processSchedule = async (req, res) => {
   const csvData = req.csvData;
-  //console.log(csvData);
   const responses = [];
 
   for (let row of csvData) {
     const { action, studentId, instructorId, classTypeId, startTime, registrationId } = row;
-
-    // Parse startTime to ensure it's a Date object
-    const parsedStartTime = moment.tz(startTime, 'MM/DD/YYYY h:mm:ss A', 'Asia/Dubai').utc().toDate();
-    //console.log(`Parsed start time: ${parsedStartTime}`);
-
-    if (isNaN(parsedStartTime.getTime())) {
-      responses.push({ status: 'error', message: `Invalid startTime: ${startTime}`, registrationId });
-      continue; // Skip to the next row if startTime is invalid
-    }
-
-    const classDuration = parseInt(process.env.CLASS_DURATION_MINUTES);
-
-    try {
-        //Add New Class Schedule
-        if (action === 'new') {
-        
-            // Check if there is an overlapping class
-            const isOverlapping = await checkClassOverlap(studentId, instructorId, startTime, classDuration);
-
-            if (isOverlapping) {
-                responses.push({
-                status: 'error',
-                message: `Class overlap detected for student or instructor.`,
-                registrationId
-                });
-                continue; // Skip adding the class
-            }
-
-            // Check daily limits for both student and instructor
-            const { exceedsStudentLimit, exceedsInstructorLimit } = await checkDailyClassLimit(studentId, instructorId, parsedStartTime);
-
-            if (exceedsStudentLimit) {
-                responses.push({ status: 'error', message: `Student has exceeded daily limit of classes.`, registrationId });
-                continue;
-            }
-
-            if (exceedsInstructorLimit) {
-                responses.push({ status: 'error', message: `Instructor has exceeded daily limit of classes.`, registrationId });
-                continue;
-            }
-            
-            //check class exit already against instructor or student 
-            const classExists = await checkClassExists(studentId, instructorId, parsedStartTime, classDuration);
-        
-            if (classExists) {
-            responses.push({ status: 'error', message: 'Class already exists for either the instructor or the student at the same time.', registrationId });
-            continue; // Skip adding the class
-            }
-            
-            
-            
-            
-            // Save new class
-            const newClass = new ClassSchedule({
-                    studentId,
-                    instructorId,
-                    classTypeId,
-                    startTime: parsedStartTime,
-                    endTime: calculateEndTime(startTime, classDuration),
-                    duration: config.classDurationMinutes,
-            });
-
-            await newClass.save();
-            responses.push({ status: 'success', message: 'Class added', registrationId: newClass._id });
-        } 
-        else if (action === 'update') {//Update class schedule as per given class schedule ID
-            
-            // Check if there is an overlapping class
-            const isOverlapping = await checkClassOverlap(studentId, instructorId, startTime, classDuration);
-
-            if (isOverlapping) {
-                responses.push({
-                status: 'error',
-                message: `Class overlap detected for student or instructor.`,
-                registrationId
-                });
-                continue; // Skip adding the class
-            }
-
-            // Check daily limits for both student and instructor
-            const { exceedsStudentLimit, exceedsInstructorLimit } = await checkDailyClassLimit(studentId, instructorId, parsedStartTime);
-
-            if (exceedsStudentLimit) {
-                responses.push({ status: 'error', message: `Student has exceeded daily limit of classes.`, registrationId });
-                continue;
-            }
-
-            if (exceedsInstructorLimit) {
-                responses.push({ status: 'error', message: `Instructor has exceeded daily limit of classes.`, registrationId });
-                continue;
-            }
-            
-            //check class exit already against instructor or student 
-            const classExists = await checkClassExists(studentId, instructorId, parsedStartTime, classDuration);
-        
-            if (classExists) {
-            responses.push({ status: 'error', message: 'Class already exists for either the instructor or the student at the same time.', registrationId });
-            continue; // Skip adding the class
-            }
- 
-            const startTime = parsedStartTime;
-            const endTime = calculateEndTime(startTime, classDuration);
-            const duration = config.classDurationMinutes;
-            
-            const classToUpdates = await ClassSchedule.findById(registrationId);
-            if (!classToUpdates){
-                responses.push({ status: 'error', message: 'Class id not exist', registrationId });
-                continue; // Skip adding the class
-            }
-
-            const classToUpdate = await ClassSchedule.findByIdAndUpdate(
-                registrationId,
-                {
-                    studentId,
-                    instructorId,
-                    classTypeId,
-                    startTime,
-                    endTime,
-                    duration
-                }
-            );
-
-            responses.push({ status: 'success', message: 'Class updated', registrationId });
-        } 
-        else if (action === 'delete') {//Delete class schedule as per given class schedule ID
-            // Delete class logic here
-            const classToDelete = await ClassSchedule.findByIdAndDelete(registrationId);
-            if (!classToDelete){
-                responses.push({ status: 'error', message: 'Class not found.', registrationId });
-                continue; // Skip adding the class
-            }
     
-            responses.push({ status: 'success', message: 'Class deleted', registrationId });
-        } 
-        // Add similar changes for 'update' and 'delete' actions if needed
-    } catch (error) {
-        responses.push({ status: 'error', message: error.message, registrationId });
-    }
-}
+    if (action === 'new' || action === 'update') {
+      // Parse startTime to ensure it's a Date object
+      const parsedStartTime = moment.tz(startTime, 'MM/DD/YYYY h:mm:ss A', 'Asia/Dubai').utc().toDate();
+      //console.log(`Parsed start time: ${parsedStartTime}`);
 
+      if (isNaN(parsedStartTime.getTime())) {
+        responses.push({ status: 'error', message: `Invalid startTime: ${startTime}`, registrationId });
+        continue; // Skip to the next row if startTime is invalid
+      }
+
+      const classDuration = parseInt(process.env.CLASS_DURATION_MINUTES);
+
+      try {
+        // Add New Class Schedule
+        if (action === 'new') {
+          // Check if there is an overlapping class
+          const isOverlapping = await checkClassOverlap(studentId, instructorId, startTime, classDuration);
+
+          if (isOverlapping) {
+            responses.push({
+              status: 'error',
+              message: `Class overlap detected for student or instructor.`,
+              registrationId
+            });
+            continue; // Skip adding the class
+          }
+
+          // Check daily limits for both student and instructor
+          const { exceedsStudentLimit, exceedsInstructorLimit } = await checkDailyClassLimit(studentId, instructorId, parsedStartTime);
+
+          if (exceedsStudentLimit) {
+            responses.push({ status: 'error', message: `Student has exceeded daily limit of classes.`, registrationId });
+            continue;
+          }
+
+          if (exceedsInstructorLimit) {
+            responses.push({ status: 'error', message: `Instructor has exceeded daily limit of classes.`, registrationId });
+            continue;
+          }
+
+          // Check if class already exists
+          const classExists = await checkClassExists(studentId, instructorId, parsedStartTime, classDuration);
+
+          if (classExists) {
+            responses.push({ status: 'error', message: 'Class already exists for either the instructor or the student at the same time.', registrationId });
+            continue; // Skip adding the class
+          }
+
+          // Save new class
+          const newClass = new ClassSchedule({
+            studentId,
+            instructorId,
+            classTypeId,
+            startTime: parsedStartTime,
+            endTime: calculateEndTime(startTime, classDuration),
+            duration: config.classDurationMinutes,
+          });
+
+          await newClass.save();
+          responses.push({ status: 'success', message: 'Class added', registrationId: newClass._id });
+        } else if (action === 'update') {
+          // Check if there is an overlapping class
+          const isOverlapping = await checkClassOverlap(studentId, instructorId, startTime, classDuration);
+
+          if (isOverlapping) {
+            responses.push({
+              status: 'error',
+              message: `Class overlap detected for student or instructor.`,
+              registrationId
+            });
+            continue; // Skip adding the class
+          }
+
+          // Check daily limits for both student and instructor
+          const { exceedsStudentLimit, exceedsInstructorLimit } = await checkDailyClassLimit(studentId, instructorId, parsedStartTime);
+
+          if (exceedsStudentLimit) {
+            responses.push({ status: 'error', message: `Student has exceeded daily limit of classes.`, registrationId });
+            continue;
+          }
+
+          if (exceedsInstructorLimit) {
+            responses.push({ status: 'error', message: `Instructor has exceeded daily limit of classes.`, registrationId });
+            continue;
+          }
+
+          // Check if class already exists
+          const classExists = await checkClassExists(studentId, instructorId, parsedStartTime, classDuration);
+
+          if (classExists) {
+            responses.push({ status: 'error', message: 'Class already exists for either the instructor or the student at the same time.', registrationId });
+            continue; // Skip updating the class
+          }
+
+          // Find class by ID and update it
+          const classToUpdate = await ClassSchedule.findByIdAndUpdate(
+            registrationId,
+            {
+              studentId,
+              instructorId,
+              classTypeId,
+              startTime: parsedStartTime,  // Using parsedStartTime here instead of redeclaring
+              endTime: calculateEndTime(startTime, classDuration),
+              duration: config.classDurationMinutes
+            }
+          );
+
+          responses.push({ status: 'success', message: 'Class updated', registrationId });
+        }
+      } catch (error) {
+        responses.push({ status: 'error', message: error.message, registrationId });
+      }
+    } else if (action === 'delete') {
+      // Delete class logic here
+      const classToDelete = await ClassSchedule.findByIdAndDelete(registrationId);
+      if (!classToDelete) {
+        responses.push({ status: 'error', message: 'Class not found.', registrationId });
+        continue; // Skip deleting the class
+      }
+
+      responses.push({ status: 'success', message: 'Class deleted', registrationId });
+    }
+  }
 
   res.json({ results: responses });
 };
+
 
 const changeEnvValues = async (req, res) =>{
      
