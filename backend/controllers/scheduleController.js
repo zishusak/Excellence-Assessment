@@ -5,20 +5,20 @@ const path = require('path');
 //const moment = require('moment');
 const moment = require('moment-timezone');
 
-// Function to add 4 hours to a given start time
-function addFourHours(startTime) {
-    const parsedTime = moment.tz(startTime, 'MM/DD/YYYY h:mm:ss A', 'Asia/Dubai');
-    return parsedTime.add(4, 'hours').toDate(); // Returns a JavaScript Date object
-}
-
 // Function to calculate the end time of a class
 function calculateEndTime(startTime, duration) {
-    // Assuming startTime is from CSV in a custom format
-    const parsedStartTime = moment.tz(startTime, 'MM/DD/YYYY h:mm:ss A', 'Asia/Dubai').utc().toDate(); 
-    return new Date(parsedStartTime.getTime() + duration * 60000); // duration is in minutes
+    // Convert startTime to a moment object in the 'Asia/Dubai' timezone
+    const parsedStartTime = moment.tz(startTime, 'MM/DD/YYYY h:mm:ss A', 'Asia/Dubai');
+    
+    // Calculate end time by adding duration in minutes
+    const endTime = parsedStartTime.add(duration, 'minutes');
+    
+    // Convert endTime to UTC before returning
+    return endTime.utc().toDate();
 }
 
 async function checkClassExists(studentId, instructorId, startTime, duration) {
+    // Convert startTime to a moment object in the 'Asia/Dubai' timezone
     const parsedStartTime = moment.tz(startTime, 'MM/DD/YYYY h:mm:ss A', 'Asia/Dubai').utc().toDate();
     const parsedEndTime = calculateEndTime(startTime, duration);
   
@@ -47,7 +47,6 @@ async function checkClassExists(studentId, instructorId, startTime, duration) {
     return !!classExists;
   }
 
-
 // Handle CSV actions
 const processSchedule = async (req, res) => {
   const csvData = req.csvData;
@@ -58,13 +57,12 @@ const processSchedule = async (req, res) => {
     const { action, studentId, instructorId, classTypeId, startTime, registrationId } = row;
 
     // Parse startTime to ensure it's a Date object
-    // Assuming startTime is in the format '10/10/2024 1:00:00 PM' from CSV
     const parsedStartTime = moment.tz(startTime, 'MM/DD/YYYY h:mm:ss A', 'Asia/Dubai').utc().toDate();
-    console.log(parsedStartTime);
-    
+    console.log(`Parsed start time: ${parsedStartTime}`);
+
     if (isNaN(parsedStartTime.getTime())) {
-        responses.push({ status: 'error', message: `Invalid startTime: ${startTime}`, registrationId });
-        continue; // Skip to the next row if startTime is invalid
+      responses.push({ status: 'error', message: `Invalid startTime: ${startTime}`, registrationId });
+      continue; // Skip to the next row if startTime is invalid
     }
 
     const MAX_CLASSES_STUDENT = parseInt(process.env.MAX_CLASSES_STUDENT_PER_DAY);
@@ -74,20 +72,21 @@ const processSchedule = async (req, res) => {
     try {
         if (action === 'new') {
 
-            const classExists = await checkClassExists(studentId, instructorId, startTime, classDuration);
+        const classExists = await checkClassExists(studentId, instructorId, parsedStartTime, classDuration);
 
-            if (classExists) {
-              responses.push({ status: 'error', message: 'Class already exists for either the instructor or the student at the same time.', registrationId });
-              continue; // Skip adding the class
-            }
+        if (classExists) {
+          responses.push({ status: 'error', message: 'Class already exists for either the instructor or the student at the same time.', registrationId });
+          continue; // Skip adding the class
+        }
           
           
-          // Save new class
-          const newClass = new ClassSchedule({
+        // Save new class
+        const newClass = new ClassSchedule({
                 studentId,
                 instructorId,
                 classTypeId,
                 startTime: parsedStartTime,
+                endTime: calculateEndTime(startTime, classDuration),
                 duration: config.classDurationMinutes,
             });
 
