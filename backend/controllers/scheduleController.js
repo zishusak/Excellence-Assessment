@@ -17,6 +17,7 @@ function calculateEndTime(startTime, duration) {
     return endTime.utc().toDate();
 }
 
+//Add function for check class exist/student exist/instructor exist at same timeslot
 async function checkClassExists(studentId, instructorId, startTime, duration) {
     // Convert startTime to a moment object in the 'Asia/Dubai' timezone
     const parsedStartTime = moment.tz(startTime, 'MM/DD/YYYY h:mm:ss A', 'Asia/Dubai').utc().toDate();
@@ -27,7 +28,7 @@ async function checkClassExists(studentId, instructorId, startTime, duration) {
       throw new Error('Invalid start time provided.');
     }
   
-    console.log(`Checking for class existence: ${parsedStartTime} to ${parsedEndTime}`);
+    //console.log(`Checking for class existence: ${parsedStartTime} to ${parsedEndTime}`);
   
     // Query to check if a class exists for either the instructor or student at the same time
     const classExists = await ClassSchedule.findOne({
@@ -43,8 +44,32 @@ async function checkClassExists(studentId, instructorId, startTime, duration) {
       }
     });
   
-    console.log(`Class existence check result: ${classExists}`);
+    //console.log(`Class existence check result: ${classExists}`);
     return !!classExists;
+  }
+
+// Function to check if a student or instructor has exceeded their daily limit
+async function checkDailyClassLimit(studentId, instructorId, startTime) {
+    const startOfDay = moment.tz(startTime, 'Asia/Dubai').startOf('day').utc().toDate();
+    const endOfDay = moment.tz(startTime, 'Asia/Dubai').endOf('day').utc().toDate();
+  
+    const studentClassCount = await ClassSchedule.countDocuments({
+      studentId,
+      startTime: { $gte: startOfDay, $lte: endOfDay }
+    });
+  
+    const instructorClassCount = await ClassSchedule.countDocuments({
+      instructorId,
+      startTime: { $gte: startOfDay, $lte: endOfDay }
+    });
+  
+    const MAX_CLASSES_STUDENT = parseInt(process.env.MAX_CLASSES_STUDENT_PER_DAY);
+    const MAX_CLASSES_INSTRUCTOR = parseInt(process.env.MAX_CLASSES_INSTRUCTOR_PER_DAY);
+  
+    const exceedsStudentLimit = studentClassCount >= MAX_CLASSES_STUDENT;
+    const exceedsInstructorLimit = instructorClassCount >= MAX_CLASSES_INSTRUCTOR;
+  
+    return { exceedsStudentLimit, exceedsInstructorLimit };
   }
 
 // Handle CSV actions
@@ -58,7 +83,7 @@ const processSchedule = async (req, res) => {
 
     // Parse startTime to ensure it's a Date object
     const parsedStartTime = moment.tz(startTime, 'MM/DD/YYYY h:mm:ss A', 'Asia/Dubai').utc().toDate();
-    console.log(`Parsed start time: ${parsedStartTime}`);
+    //console.log(`Parsed start time: ${parsedStartTime}`);
 
     if (isNaN(parsedStartTime.getTime())) {
       responses.push({ status: 'error', message: `Invalid startTime: ${startTime}`, registrationId });
@@ -71,13 +96,28 @@ const processSchedule = async (req, res) => {
 
     try {
         if (action === 'new') {
+        
+         // Check daily limits for both student and instructor
+        const { exceedsStudentLimit, exceedsInstructorLimit } = await checkDailyClassLimit(studentId, instructorId, parsedStartTime);
+
+        if (exceedsStudentLimit) {
+            responses.push({ status: 'error', message: `Student has exceeded daily limit of classes.`, registrationId });
+            continue;
+        }
+
+        if (exceedsInstructorLimit) {
+            responses.push({ status: 'error', message: `Instructor has exceeded daily limit of classes.`, registrationId });
+            continue;
+        }
 
         const classExists = await checkClassExists(studentId, instructorId, parsedStartTime, classDuration);
-
+       
         if (classExists) {
           responses.push({ status: 'error', message: 'Class already exists for either the instructor or the student at the same time.', registrationId });
           continue; // Skip adding the class
         }
+        
+        
           
           
         // Save new class
