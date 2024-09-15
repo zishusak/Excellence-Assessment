@@ -1,0 +1,5 @@
+registrationId,studentId,instructorId,classTypeId,startTime,action
+66e70add2c72455550a241d7,S001,I001,C001,10/10/2024 2:00,update
+null,S002,I002,C001,10/18/2024 7:00,new
+null,S003,I003,C001,10/18/2024 6:00,new
+66e70add2c72455550a24209,null,null,null,null,delete
