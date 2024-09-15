@@ -53,4 +53,33 @@ const getClassScheduleReport = async (req, res) => {
     }
   };
   
-  module.exports = { getClassScheduleReport };
+  // API to get the per-day class count
+const getDailyClassCount = async (req, res) => {
+    try {
+      const result = await ClassSchedule.aggregate([
+        {
+          $group: {
+            _id: {
+              $dateToString: { format: "%Y-%m-%d", date: "$startTime" } // Group by date (YYYY-MM-DD)
+            },
+            classCount: { $sum: 1 } // Count the number of classes per day
+          }
+        },
+        {
+          $sort: { "_id": 1 } // Sort by date ascending
+        }
+      ]);
+  
+      // Format the data to be returned for the frontend graph
+      const formattedData = result.map(item => ({
+        date: item._id,
+        count: item.classCount
+      }));
+  
+      res.json({ status: 'success', data: formattedData });
+    } catch (error) {
+      res.status(500).json({ status: 'error', message: error.message });
+    }
+  };
+
+  module.exports = { getClassScheduleReport, getDailyClassCount };
