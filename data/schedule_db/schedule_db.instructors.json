@@ -1,0 +1,40 @@
+[{
+  "_id": {
+    "$oid": "66e489900f3811ec4842aea0"
+  },
+  "instructorId": "I001",
+  "name": "Dr. Jane Doe",
+  "email": "jane.doe@example.com",
+  "specialization": "Mathematics",
+  "phone": "+1234567890"
+},
+{
+  "_id": {
+    "$oid": "66e489c00f3811ec4842aea1"
+  },
+  "instructorId": "I002",
+  "name": "Mr. John Smith",
+  "email": "john.smith@example.com",
+  "specialization": "Physics",
+  "phone": "+0987654321"
+},
+{
+  "_id": {
+    "$oid": "66e489d90f3811ec4842aea2"
+  },
+  "instructorId": "I003",
+  "name": "Dr. Sarah Johnson",
+  "email": "sarah.johnson@example.com",
+  "specialization": "Computer Science",
+  "phone": "+1122334455"
+},
+{
+  "_id": {
+    "$oid": "66e489e80f3811ec4842aea3"
+  },
+  "instructorId": "I004",
+  "name": "Dr. Simon Johnson",
+  "email": "simon.johnson@example.com",
+  "specialization": "Science",
+  "phone": "+15575555755"
+}]

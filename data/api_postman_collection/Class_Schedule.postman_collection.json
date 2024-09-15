@@ -1,0 +1,151 @@
+{
+	"info": {
+		"_postman_id": "6764f73c-63a4-4ebd-a926-1253d70584b5",
+		"name": "Class_Schedule",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add Class Schedule",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/DELL/Downloads/Book12.csv"
+						}
+					]
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/schedule/upload",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"schedule",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change Config Env",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"MAX_CLASSES_STUDENT_PER_DAY\":\"10\",\"MAX_CLASSES_INSTRUCTOR_PER_DAY\":\"10\",\"CLASS_DURATION_MINUTES\":\"60\",\"MAX_CLASSES_PER_CLASS_TYPE\":\"5\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/schedule/config",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"schedule",
+						"config"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Report Date/Instructor Or Full List",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "date",
+							"value": "2024-10-10",
+							"type": "default",
+							"disabled": true
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/schedule/class-schedule/report?date=2024-10-10&instructorName=Dr. Jane Doe",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"schedule",
+						"class-schedule",
+						"report"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2024-10-10"
+						},
+						{
+							"key": "instructorName",
+							"value": "Dr. Jane Doe"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Chart Graph",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:5000/api/schedule/class-schedule/daily-count",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"schedule",
+						"class-schedule",
+						"daily-count"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

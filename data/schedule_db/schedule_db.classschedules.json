@@ -1,0 +1,336 @@
+[{
+  "_id": {
+    "$oid": "66e70add2c72455550a241d7"
+  },
+  "studentId": "S001",
+  "instructorId": "I001",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-10T09:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-10T09:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70add2c72455550a241dc"
+  },
+  "studentId": "S002",
+  "instructorId": "I002",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-10T12:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-10T12:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70add2c72455550a241e1"
+  },
+  "studentId": "S003",
+  "instructorId": "I003",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-10T13:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-10T13:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70add2c72455550a241e6"
+  },
+  "studentId": "S004",
+  "instructorId": "I004",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-10T14:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-10T14:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70add2c72455550a241eb"
+  },
+  "studentId": "S001",
+  "instructorId": "I001",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-14T09:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-14T09:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70add2c72455550a241f0"
+  },
+  "studentId": "S002",
+  "instructorId": "I002",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-14T12:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-14T12:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70add2c72455550a241f5"
+  },
+  "studentId": "S003",
+  "instructorId": "I003",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-14T13:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-14T13:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70add2c72455550a241fa"
+  },
+  "studentId": "S004",
+  "instructorId": "I004",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-14T14:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-14T14:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70add2c72455550a241ff"
+  },
+  "studentId": "S001",
+  "instructorId": "I001",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-15T09:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-15T09:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70add2c72455550a24204"
+  },
+  "studentId": "S002",
+  "instructorId": "I002",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-15T12:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-15T12:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70add2c72455550a24209"
+  },
+  "studentId": "S003",
+  "instructorId": "I003",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-15T13:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-15T13:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70add2c72455550a2420e"
+  },
+  "studentId": "S004",
+  "instructorId": "I004",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-15T14:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-15T14:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70ae92c72455550a24213"
+  },
+  "studentId": "S001",
+  "instructorId": "I001",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-10T22:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-10T22:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70ae92c72455550a24218"
+  },
+  "studentId": "S002",
+  "instructorId": "I002",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-10T01:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-10T01:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70ae92c72455550a2421d"
+  },
+  "studentId": "S003",
+  "instructorId": "I003",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-10T02:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-10T02:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70ae92c72455550a24222"
+  },
+  "studentId": "S004",
+  "instructorId": "I004",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-10T03:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-10T03:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70b292c72455550a24227"
+  },
+  "studentId": "S001",
+  "instructorId": "I001",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-10T11:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-10T11:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70b292c72455550a2422c"
+  },
+  "studentId": "S002",
+  "instructorId": "I002",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-10T15:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-10T15:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70b292c72455550a24231"
+  },
+  "studentId": "S003",
+  "instructorId": "I003",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-10T14:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-10T14:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70b292c72455550a24236"
+  },
+  "studentId": "S004",
+  "instructorId": "I004",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-10T12:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-10T12:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e70e4fe8534a6198b3e5aa"
+  },
+  "studentId": "S001",
+  "instructorId": "I001",
+  "classTypeId": "C001",
+  "startTime": {
+    "$date": "2024-10-09T23:00:00.000Z"
+  },
+  "endTime": {
+    "$date": "2024-10-09T23:45:00.000Z"
+  },
+  "duration": 45,
+  "__v": 0
+}]

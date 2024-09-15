@@ -1,0 +1,55 @@
+[{
+  "_id": {
+    "$oid": "66e48a270f3811ec4842aea5"
+  },
+  "studentId": "S001",
+  "name": "Alice Johnson",
+  "email": "alice.johnson@example.com",
+  "enrollmentYear": 2022,
+  "major": "Mathematics",
+  "phone": "+1231231234"
+},
+{
+  "_id": {
+    "$oid": "66e48a320f3811ec4842aea6"
+  },
+  "studentId": "S002",
+  "name": "Bob Williams",
+  "email": "bob.williams@example.com",
+  "enrollmentYear": 2023,
+  "major": "Physics",
+  "phone": "+2342342345"
+},
+{
+  "_id": {
+    "$oid": "66e48a470f3811ec4842aea7"
+  },
+  "studentId": "S003",
+  "name": "Emily Davis",
+  "email": "emily.davis@example.com",
+  "enrollmentYear": 2021,
+  "major": "Computer Science",
+  "phone": "+3453453456"
+},
+{
+  "_id": {
+    "$oid": "66e682adbfeafa564244734a"
+  },
+  "studentId": "S004",
+  "name": "Student Four",
+  "email": "four.std@example.com",
+  "enrollmentYear": 2021,
+  "major": "Computer Science",
+  "phone": "+3453455656"
+},
+{
+  "_id": {
+    "$oid": "66e682c6bfeafa564244734b"
+  },
+  "studentId": "S005",
+  "name": "Student FIve",
+  "email": "five.std@example.com",
+  "enrollmentYear": 2021,
+  "major": "Computer Science",
+  "phone": "+345345569"
+}]

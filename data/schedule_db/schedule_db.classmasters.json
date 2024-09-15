@@ -1,0 +1,24 @@
+[{
+  "_id": {
+    "$oid": "66e48a780f3811ec4842aea9"
+  },
+  "classId": "C001",
+  "className": "Mathematics 101",
+  "description": "An introduction to basic mathematical concepts and principles."
+},
+{
+  "_id": {
+    "$oid": "66e48a8a0f3811ec4842aeaa"
+  },
+  "classId": "C002",
+  "className": "Physics 101",
+  "description": "Fundamentals of physics including mechanics and thermodynamics."
+},
+{
+  "_id": {
+    "$oid": "66e48aa00f3811ec4842aeab"
+  },
+  "classId": "C003",
+  "className": "Computer Science 101",
+  "description": "Introduction to programming and problem-solving in computer science."
+}]
